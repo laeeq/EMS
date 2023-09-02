@@ -1,0 +1,198 @@
+﻿<UserControl x:Class="EmployeeManagementSystem.Views.EmployeesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:local="clr-namespace:EmployeeManagementSystem.Views"
+             mc:Ignorable="d" 
+             
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Employees"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="28" FontFamily="Georgian"/>
+        <DockPanel Grid.Row="1"  >
+            <StackPanel DockPanel.Dock="Left" HorizontalAlignment="Right" Orientation="Horizontal" Margin="20 0 20 0">
+                <Button Height="30" Content="Add" Command="{Binding AddCommand}" FontSize="14" Width="80"/>
+                <Button Height="30" Content="Refresh" Command="{Binding RefreshCommand}" FontSize="14" Width="80"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal" Margin="20 0 20 0">
+                <!--<Button x:Name="Run" IsEnabled="{Binding CanRun}" Content="Run" Width="120"/>-->
+                <TextBlock Text="Search:" VerticalAlignment="Center" FontSize="18"/>
+                <Viewbox Width="5"/>
+                <TextBox Name="SerachTB" Height="30" Width="180"   Margin="0" >
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>
+                </TextBox>
+                <!--<TextBox Width="160" Text="{Binding SearchText}">
+                    --><!--<TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </TextBox.Resources>--><!--
+                </TextBox>-->
+                <Viewbox Width="5"/>
+                
+                <Button Width="30"
+                    Height="30"
+                        Command="{Binding SearchCommand}"
+                        CommandParameter="{Binding ElementName=SerachTB,Path=Text}"
+                        Background="Transparent"
+                    Style="{DynamicResource MetroCircleButtonStyle}">
+                    <iconPacks:PackIconModern Width="16" Height="16" Kind="Magnify" />
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <!--<Button  x:Name="Stop" Background="Gray" Content="Stop" Width="120"/>-->
+            </StackPanel>
+            <!--<Button Name="Export" HorizontalAlignment="Right" Margin="0 0 20 0" Content="Export" Width="120" />-->
+        </DockPanel>
+        <!--<Controls:ProgressRing Foreground="{DynamicResource AccentColorBrush}"  
+                               IsActive="true" Grid.Row="2" Panel.ZIndex="1" Margin="0,0,0,40"
+                               VerticalAlignment="Center">
+        </Controls:ProgressRing>-->
+        <DataGrid x:Name="dgEmployees" Grid.Row="3"
+                        Margin="20 2 20 0"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      BorderBrush="LightBlue"
+                      BorderThickness="1"
+                      GridLinesVisibility="Horizontal"
+                      SelectionUnit="FullRow" SelectionMode="Extended"
+                      ColumnWidth="*"    
+                      ItemsSource="{Binding Employees}" 
+                      >
+            <!--<DataGrid.Effect>
+                    <DropShadowEffect />
+                </DataGrid.Effect>-->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="LightBlue"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="DodgerBlue"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="DodgerBlue"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Trigger>
+                        <!--<Setter Property="Background" Value="LightGray"/>
+                                <Setter Property="Foreground" Value="Black"/>-->
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn 
+                            Header="First Name"
+                            Binding="{Binding Path=FirstName}" 
+                            />
+                <DataGridTextColumn 
+                            Header="Last Name"
+                            Binding="{Binding Path=LastName}" 
+                            />
+                <DataGridTextColumn 
+                            Header="Email"
+                            Binding="{Binding Path=Email}"                                    
+                            />
+                <DataGridTextColumn 
+                            Header="Date Of Birth"
+                            Binding="{Binding Path=BirthDate, StringFormat=\{0:dd-MM-yyyy\}}"                                    
+                            />
+                <DataGridTextColumn 
+                            Header="Department"
+                            Binding="{Binding Path=Department}"                                    
+                        Width="SizeToHeader"
+                            />
+                <DataGridTemplateColumn Header="Edit" Width="SizeToHeader" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=DataContext.EditCommand, RelativeSource= {RelativeSource FindAncestor,AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}" 
+                                Style="{StaticResource IconButtonStyle}" ToolTip="Edit">
+                                <iconPacks:PackIconMaterial 
+                                        Width="16"
+                                        Height="16"
+                                        Margin="0 4 0 0"
+                                        Kind="Pencil">
+                                </iconPacks:PackIconMaterial>
+                            </Button>
+                            <!--<Button BorderThickness="0" Background="LightBlue" Foreground="Black"   ToolTip="Delete">
+                                <iconPacks:PackIconMaterial 
+                                        Width="22"
+                                        Height="20"
+                                        Kind="Pencil">
+                                </iconPacks:PackIconMaterial>
+                                <Button.Style >
+                                    <Style TargetType="Button" >
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Button.Background" Value="DodgerBlue"/>
+                                                <Setter Property="Button.Foreground" Value="White"/>
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                <Setter Property="Button.Background" Value="DodgerBlue"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>-->
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Delete" Width="SizeToHeader" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding Path=DataContext.DeleteCommand, RelativeSource= {RelativeSource FindAncestor,AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource IconButtonStyle}" ToolTip="Delete" >
+                                <iconPacks:PackIconMaterial 
+                                        Width="16"
+                                        Height="16"
+                                        Margin="0 4 0 0"
+                                        Kind="Delete">
+                                </iconPacks:PackIconMaterial>
+                            </Button>
+                            <!--
+                            
+                            -->
+                            <!--<Button BorderThickness="0" Background="LightBlue" Foreground="Black"   ToolTip="Delete">
+                                <iconPacks:PackIconMaterial 
+                                        Width="22"
+                                        Height="20"
+                                        Kind="Delete"/>
+                                <Button.Style >
+                                    <Style TargetType="Button" >
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="DodgerBlue"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                            <DataTrigger Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True">
+                                                <Setter Property="Button.Background" Value="DodgerBlue"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>-->
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
