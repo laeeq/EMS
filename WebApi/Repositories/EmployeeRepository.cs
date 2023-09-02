@@ -36,12 +36,12 @@ namespace WebApi.Repositories
         {
             //employee.Id = ++_nextId;
             Employee emp = _employees.FirstOrDefault(c => (c.FirstName == employee.FirstName && c.LastName == employee.LastName) || c.Email == employee.Email);
-            if (emp != null)
+            if (emp == null)
             {
-
+                _employees.Add(employee);
+                await _context.SaveChangesAsync();
             }
-            _employees.Add(employee);
-            await _context.SaveChangesAsync();
+            
             return employee;
         }
         public async Task<bool> Remove(int id)
